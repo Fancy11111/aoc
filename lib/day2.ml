@@ -68,3 +68,20 @@ let v1 lines =
     (* let _ = List.iter ~f:print_game mapped in *)
     Format.sprintf "%d" @@
     (List.fold mapped ~init:0 ~f:(fun acc (id,_) -> acc+id))
+
+let max_in_game (_, css) = 
+    let flat = List.fold ~init:[] ~f:(fun acc cs -> List.append acc cs) css in
+    List.fold ~init:(0, 0, 0) ~f:(fun (r,g,b) c -> match c with
+        | Red v -> ((max v r), g, b)
+        | Green v -> (r, (max v g), b)
+        | Blue v -> (r, g, (max v b))
+    ) flat
+
+let v2 lines = 
+    let mapped = List.map ~f:parse_game lines in
+    (* let _ = List.iter ~f:print_game mapped in *)
+    let res = List.fold ~init:0 ~f:(fun acc g -> 
+        let (r,g,b) = max_in_game g in
+        acc + (r * g * b)) mapped in
+    Format.sprintf "%d" @@
+    res
