@@ -1,6 +1,6 @@
 (tests
- (names test_day1 test_day2)
- (modules test_day1 test_day2)
+ (names test_day1 test_day2 test_day3)
+ (modules test_day1 test_day2 test_day3)
  (libraries aoc_2023 ounit2)
  (deps (glob_files_rec data/*))
  )

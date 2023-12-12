@@ -6,7 +6,7 @@ let usage_msg = "aoc_2023 [-d day] <file1>"
 
 let input_file = ref ""
 
-let day = ref 2 
+let day = ref 3
 
 let anon_fun filename = 
     input_file := filename
@@ -26,6 +26,7 @@ let get_day d =
     match d with
     | 1 -> ((Some Day1.v1), (Some Day1.v2)) 
     | 2 -> ((Some Day2.v1), (Some Day2.v2)) 
+    | 3 -> ((Some Day3.v1), (None)) 
     | _ -> (None, None) 
 
 (* let () = *)

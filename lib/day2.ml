@@ -6,6 +6,8 @@ type color =
     | Blue of int
     | Green of int
 
+(* type game = (int * (color list list)) *)
+
 let is_ws = (function 
     | ' ' -> true
     | _ -> false
@@ -38,7 +40,6 @@ let game = ((string "Game") <* ws) *> integer <* char ':' <* ws >>= (fun id ->  
 (*         List.fold ~init:(colors_to_string @@ List.hd_exn css) ~f:(fun acc c -> acc ^ "; " ^ colors_to_string c) @@ List.tl_exn css   *)
 (*     ) *)
 
-(* type game = (int * (color list list)) *)
 let parse_game line =
     (* let _ = print_endline line in *)
     match parse_string ~consume:Consume.Prefix game line with 
