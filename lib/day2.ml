@@ -17,16 +17,13 @@ let is_ws = (function
 
 let ws = skip_while is_ws
 
-let integer =
-  take_while1 (function '0' .. '9' -> true | _ -> false) >>| int_of_string
-
-let color_showing = integer <* ws >>= (fun v -> choice [string "blue" >>| (fun _ -> Blue v); string "red" >>| (fun _ -> Red v); string "green" >>| (fun _ -> Green v)])
+let color_showing = Helper.integer <* ws >>= (fun v -> choice [string "blue" >>| (fun _ -> Blue v); string "red" >>| (fun _ -> Red v); string "green" >>| (fun _ -> Green v)])
 
 let showing =  sep_by (string ", ") color_showing
 
 let showings = sep_by (string "; ") showing
 
-let game = ((string "Game") <* ws) *> integer <* char ':' <* ws >>= (fun id ->  showings >>| (fun css -> (id, css)))
+let game = ((string "Game") <* ws) *> Helper.integer <* char ':' <* ws >>= (fun id ->  showings >>| (fun css -> (id, css)))
 
 (* let color_to_string c = match c with *)
 (*     | Red v -> Format.sprintf "%d red" v *)

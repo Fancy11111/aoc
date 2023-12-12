@@ -1,3 +1,9 @@
+open Angstrom;;
+
+let integer =
+  take_while1 (function '0' .. '9' -> true | _ -> false) >>| int_of_string
+
+
 let collect_lines input = 
     let lines = ref [] in
     let chan = open_in input in
