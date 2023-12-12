@@ -41,39 +41,70 @@ let get_all_numbers lines =
         List.append ns (get_numbers i line)
     ) lines
 
-let group_parts ps = 
-    let parts : char list = List.map ps ~f:(fun (p, _) -> p) in
-    Set.to_map (Char.Set.of_list parts) ~f:(fun p -> List.fold ps ~init:[] ~f:(fun acc c ->
-        match c with 
-        | (_p, pos) when Char.equal _p p  -> pos :: acc
-        | _ -> acc
-    ))
+(* let group_parts ps =  *)
+(*     let parts : char list = List.map ps ~f:(fun (p, _) -> p) in *)
+(*     Set.to_map (Char.Set.of_list parts) ~f:(fun p -> List.fold ps ~init:[] ~f:(fun acc c -> *)
+(*         match c with  *)
+(*         | (_p, pos) when Char.equal _p p  -> pos :: acc *)
+(*         | _ -> acc *)
+(*     )) *)
 
-let number_touches px_start px_end x_start x_end =
-    let _ = Format.printf "part: %d %d; number: %d %d\n" px_start px_end x_start x_end in
+let number_touches px x_start x_end =
+    let (px_start, px_end) = (px-1, px+1) in
     (x_start <= px_start && x_end >= px_start) || (x_start <= px_end && x_end >= px_end) || (x_start >= px_start && x_end <= px_end) || (x_start <= px_start && x_end >= px_end)
     (* (x_start >= px_start && x_end <= px_end) || (x_start <= px_start && x_end >= px_end) *)
 
-let part_values ps ns = 
-    Map.map ps ~f:(fun pos_list -> 
-        List.fold ~init:0 pos_list ~f:(fun acc (py,px) -> 
-            let (py_start, py_end) = (py-1, py+1) in
-            let _ = Format.printf "pos: %d %d yStart: %d, yEnd: %d \n" px py py_start py_end in 
-            let touches_p = number_touches (px-1) (px+1) in
-            acc + List.fold ns ~init:0 ~f:(fun acc (y,x,len,v) ->
-                let touches = py_start <= y && py_end >= y && touches_p (x) (x+len) in
-                (* let _ = Format.printf "num: x,y,len: %d %d %d %b\n" x y len (touches) in *)
-                if (touches) then acc + v
-                else acc
-            )
-        )
+(* let part_values ps ns =  *)
+(*     Map.map ps ~f:(fun pos_list ->  *)
+(*         List.fold ~init:0 pos_list ~f:(fun acc (py,px) ->  *)
+(*             let (py_start, py_end) = (py-1, py+1) in *)
+(*             let touches_p = number_touches px in *)
+(*             acc + List.fold ns ~init:0 ~f:(fun acc (y,x,len,v) -> *)
+(*                 let touches = py_start <= y && py_end >= y && touches_p (x) (x+len) in *)
+(*                 (* let _ = Format.printf "num: x,y,len: %d %d %d %b\n" x y len (touches) in *) *)
+(*                 if (touches) then acc + v *)
+(*                 else acc *)
+(*             ) *)
+(*         ) *)
+(*     ) *)
+
+let group_parts_numbers ps ns =
+    List.map ps ~f:(fun p -> 
+        let (_, (py,px)) = p in
+        let (py_start, py_end) = (py-1, py+1) in
+        let touches_p = number_touches px in
+        (p, List.fold ns ~init:[] ~f:(fun acc (y,x,len,v) -> 
+            let touches = py_start <= y && py_end >= y && touches_p (x) (x+len) in
+            if touches then v :: acc
+            else acc
+        ))
     )
 
-let v1 lines = 
-    let parts = group_parts @@ (get_parts lines) in 
-    let numbers = get_all_numbers lines in
-    (* let _ = List.iter parts ~f:(fun (p, (x, y)) -> Format.printf "%c %d %d\n" p x y) in *)
-    let _ = List.iter numbers ~f:(fun (y,x, len, v) -> Format.printf "%d %d %d %d\n" x y len v) in
-    let part_vals = part_values parts numbers in 
-    let sum = Map.fold ~init:0 ~f:(fun ~key:_ ~data acc -> acc+data) part_vals in
+(* let v1 lines =  *)
+(*     let parts = group_parts @@ (get_parts lines) in  *)
+(*     let numbers = get_all_numbers lines in *)
+(*     (* let _ = List.iter parts ~f:(fun (p, (x, y)) -> Format.printf "%c %d %d\n" p x y) in *) *)
+(*     let _ = List.iter numbers ~f:(fun (y,x, len, v) -> Format.printf "%d %d %d %d\n" x y len v) in *)
+(*     let part_vals = part_values parts numbers in  *)
+(*     let sum = Map.fold ~init:0 ~f:(fun ~key:_ ~data acc -> acc+data) part_vals in *)
+(*     Format.sprintf "%d\n" sum *)
+
+let v1 lines =
+    let parts = get_parts lines in 
+    let numbers = get_all_numbers lines in 
+    let parts_numbers = group_parts_numbers parts numbers in 
+    let sum = List.fold parts_numbers ~init:0 ~f:(fun acc (_, ns) -> 
+        List.fold ns ~init:acc ~f:(fun _acc _v -> _acc+_v)
+    ) in
+    Format.sprintf "%d\n" sum
+
+
+let v2 lines =
+    let parts = get_parts lines in 
+    let numbers = get_all_numbers lines in 
+    let parts_numbers = group_parts_numbers parts numbers in 
+    let sum = List.fold parts_numbers ~init:0 ~f:(fun acc (_, ns) -> 
+        if List.length ns = 2 then acc + List.fold ns ~init:1 ~f:(fun _acc _v -> _acc*_v)
+        else acc
+    ) in
     Format.sprintf "%d\n" sum

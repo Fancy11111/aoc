@@ -26,7 +26,7 @@ let get_day d =
     match d with
     | 1 -> ((Some Day1.v1), (Some Day1.v2)) 
     | 2 -> ((Some Day2.v1), (Some Day2.v2)) 
-    | 3 -> ((Some Day3.v1), (None)) 
+    | 3 -> ((Some Day3.v1), (Some Day3.v2)) 
     | _ -> (None, None) 
 
 (* let () = *)
