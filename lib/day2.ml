@@ -41,12 +41,13 @@ let parse_game line =
     (* let _ = print_endline line in *)
     match parse_string ~consume:Consume.Prefix game line with 
         | Ok(g) -> (
+
             (* let _ = print_game g in *)
             g
         )
         | Error(e) -> (
             let _ = print_endline ("Error: " ^ e) in 
-            (0, [])
+             (0, [])
         )
 
 let is_valid_color c =
@@ -83,3 +84,5 @@ let v2 lines =
         acc + (r * g * b)) mapped in
     Format.sprintf "%d" @@
     res
+
+let d = 2

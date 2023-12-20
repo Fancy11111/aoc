@@ -56,5 +56,4 @@ let v2 lines =
         ((List.hd mapped) * 10) + (List.hd (List.rev mapped))
     ) lines
 
-
-
+let d = 1

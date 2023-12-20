@@ -96,7 +96,7 @@ let v1 lines =
     let sum = List.fold parts_numbers ~init:0 ~f:(fun acc (_, ns) -> 
         List.fold ns ~init:acc ~f:(fun _acc _v -> _acc+_v)
     ) in
-    Format.sprintf "%d\n" sum
+    Format.sprintf "%d" sum
 
 
 let v2 lines =
@@ -107,4 +107,6 @@ let v2 lines =
         if List.length ns = 2 then acc + List.fold ns ~init:1 ~f:(fun _acc _v -> _acc*_v)
         else acc
     ) in
-    Format.sprintf "%d\n" sum
+    Format.sprintf "%d" sum
+
+let d = 3
